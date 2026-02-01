@@ -1,0 +1,41 @@
+OrderID,CustomerID,ProductName,Category,Price,OrderDate,Quantity,City,PaymentMethod,OrderStatus
+62,13878,Product_31,Electronics,322.46,2023-06-12,8,San Jose,PayPal,Cancelled
+74,59124,Product_341,Electronics,445.02,2023-04-05,5,Los Angeles,PayPal,Returned
+99,41302,Product_219,Electronics,381.04,2023-09-15,7,San Jose,PayPal,Returned
+116,36520,Product_343,Electronics,498.49,2023-03-16,9,Dallas,PayPal,Returned
+274,60361,Product_129,Electronics,405.92,2023-12-07,2,Phoenix,PayPal,Shipped
+370,76683,Product_168,Electronics,390.54,2023-04-22,6,Houston,PayPal,Delivered
+378,95022,Product_123,Electronics,362.66,2023-09-20,10,Dallas,PayPal,Returned
+613,58140,Product_206,Electronics,473.8,2023-07-16,1,Dallas,PayPal,Cancelled
+710,26784,Product_50,Electronics,331.91,2023-01-20,5,San Antonio,PayPal,Returned
+743,25006,Product_151,Electronics,425.34,2023-03-08,4,Chicago,PayPal,Delivered
+915,48850,Product_218,Electronics,474.15,2023-06-13,1,New York,PayPal,Shipped
+1132,63073,Product_472,Electronics,352.3,2023-05-27,1,Los Angeles,PayPal,Cancelled
+1204,25718,Product_277,Electronics,335.91,2023-07-25,10,Philadelphia,PayPal,Pending
+1219,55404,Product_363,Electronics,439.66,2023-04-22,1,Chicago,PayPal,Shipped
+1223,61405,Product_324,Electronics,414.86,2023-04-06,5,San Jose,PayPal,Delivered
+1314,14670,Product_491,Electronics,377.71,2023-08-13,2,San Antonio,PayPal,Cancelled
+1462,88250,Product_266,Electronics,308.21,2023-05-24,3,San Diego,PayPal,Shipped
+1583,86348,Product_497,Electronics,322.37,2023-10-02,9,San Diego,PayPal,Cancelled
+1751,61574,Product_5,Electronics,424.94,2023-04-09,6,San Jose,PayPal,Delivered
+1752,46875,Product_481,Electronics,360.03,2023-10-19,3,Phoenix,PayPal,Returned
+1793,41894,Product_212,Electronics,328.54,2023-12-31,7,San Antonio,PayPal,Delivered
+1800,29935,Product_434,Electronics,399.22,2023-01-19,3,San Antonio,PayPal,Pending
+1845,91132,Product_323,Electronics,471.24,2023-09-08,10,San Antonio,PayPal,Cancelled
+1875,84349,Product_392,Electronics,467.68,2023-05-04,9,San Diego,PayPal,Delivered
+1916,48009,Product_314,Electronics,350.22,2023-02-18,10,San Diego,PayPal,Cancelled
+2035,92511,Product_14,Electronics,334.79,2023-12-02,5,Philadelphia,PayPal,Shipped
+2206,13295,Product_265,Electronics,447.47,2023-11-20,8,Phoenix,PayPal,Delivered
+2210,44671,Product_39,Electronics,421.72,2023-07-26,2,Phoenix,PayPal,Delivered
+2277,28997,Product_372,Electronics,323.51,2023-02-27,2,Los Angeles,PayPal,Cancelled
+2349,77243,Product_192,Electronics,476.66,2023-01-20,2,New York,PayPal,Delivered
+2355,96191,Product_361,Electronics,428.29,2023-11-13,2,San Diego,PayPal,Returned
+2449,59124,Product_357,Electronics,383.21,2023-06-07,8,San Diego,PayPal,Delivered
+2450,90236,Product_240,Electronics,481.41,2023-12-18,10,Los Angeles,PayPal,Shipped
+2517,23788,Product_126,Electronics,447.91,2023-10-03,8,New York,PayPal,Pending
+2533,13860,Product_98,Electronics,494.37,2023-08-19,7,San Antonio,PayPal,Pending
+2637,96046,Product_125,Electronics,457.73,2023-05-07,10,Philadelphia,PayPal,Shipped
+2644,21443,Product_435,Electronics,417.71,2023-05-23,7,Dallas,PayPal,Pending
+2685,35812,Product_243,Electronics,384.71,2023-03-22,2,Houston,PayPal,Delivered
+2835,80552,Product_456,Electronics,361.98,2023-11-22,10,San Diego,PayPal,Delivered
+2973,40274,Product_460,Electronics,478.97,2023-06-03,2,San Antonio,PayPal,Pending
