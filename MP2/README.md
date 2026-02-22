@@ -58,13 +58,13 @@ aws ec2 authorize-security-group-ingress \
 
 ## 2. Set up Data Access Service
 
-### 1. SSH into the instance
+### 2-1. SSH into the instance
 
 ```bash
 ssh -i <pem-file> ec2-user@13.231.104.90
 ```
 
-### 2. Set up the environment
+### 2-2. Set up the environment
 
 ```bash
 python3 -m venv .venv
@@ -76,7 +76,7 @@ pip install --upgrade "fastapi[standard]"
 >
 > - Personally, I use [`uv`](https://docs.astral.sh/uv/) for `Python` package management. For the purpose of demonstration, I chose the simplest way here.
 
-### 3. Write a simple FastAPI server based on the requirements
+### 2-3. Write a simple FastAPI server based on the requirements
 
 ```python
 import os
@@ -123,13 +123,13 @@ async def get_seed():
 >
 > Using `Redis` should be a best practice. But for simplicity, I chose to use file I/O.
 
-### 4. Spin up the server
+### 2-4. Spin up the server
 
 ```bash
 fastapi run server.py --port 8080
 ```
 
-### 5. Test your server with the following commands
+### 2-5. Test your server with the following commands
 
 ```bash
 # get seed, should see 0
@@ -146,25 +146,25 @@ curl http://<public-ip-address>:8080/
 
 ## 3. Set up Receiver Service
 
-### 1. Launch 2 other receiver EC2 instances
+### 3-1. Launch 2 other receiver EC2 instances
 
 > [!NOTE]
 > 
 > As required by the assignment, we need to assign the two receiver instances a subnet different from the first `EC2` instance
 
-#### 1. Get the default VPC ID
+#### 3-1-1. Get the default VPC ID
 
 ```bash
 aws ec2 describe-vps --filters Name=isDefault,Values=true
 ```
 
-#### 2. Get the list of subnets and choose a different one
+#### 3-1-2. Get the list of subnets and choose a different one
 
 ```bash
 aws ec2 describe-subnets --filters Name=vpc-id,Values=<your-vpc-id>
 ```
 
-#### 3. Get the security group ID
+#### 3-1-3. Get the security group ID
 
 - Since we can't using both `--subnet-id` and `--security-groups` at the same time when using the `run-instances` command, we need to get the security group ID of your chosen security group and use it with `--security-group-ids` flag latter.
 
@@ -175,7 +175,7 @@ aws ec2 describe-security-groups \
   --output text
 ```
 
-#### 4. Create the instances
+#### 3-1-4. Create the instances
 
 ```bash
 # Launch Instances
@@ -194,7 +194,7 @@ aws ec2 run-instances \
 > 
 > Remember to copy their `InstanceId`, `SubnetId`, and `PublicIpAddress`
 
-#### 5. Create the IAM Role with AmazonVPCFullAccess
+#### 3-1-5. Create the IAM Role with AmazonVPCFullAccess
 
 - In `trust-policy.json`
 
@@ -221,7 +221,7 @@ aws iam create-role \
 --assume-role-policy-document file://trust-policy.json
 ```
 
-#### 6. Attach policy to the role
+#### 3-1-6. Attach policy to the role
 
 ```bash
 aws iam attach-role-policy \
@@ -230,7 +230,7 @@ aws iam attach-role-policy \
 
 ```
 
-#### 7. Create an instance profile and add the role to it
+#### 3-1-7. Create an instance profile and add the role to it
 
 ```bash
 aws iam create-instance-profile --instance-profile ec2-vpc-full-access-profile
@@ -239,7 +239,7 @@ aws iam add-role-to-instance-profile \
 --role-name ec2-vpc-full-access
 ```
 
-#### 8. Associate the EC2 Instances with the profile
+#### 3-1-8. Associate the EC2 Instances with the profile
 
 ```bash
 for id in \
@@ -252,7 +252,7 @@ do
 done
 ```
 
-### 2. Create a Receiver Script `receiver.py`
+### 3-2. Create a Receiver Script `receiver.py`
 
 ```python
 from fastapi import FastAPI
@@ -321,9 +321,9 @@ async def route_post(body: UpdateSeedReq):
 ```
 
 
-### 3. Write a Setup Script and scp It to the Instances
+### 3-3. Write a Setup Script and scp It to the Instances
 
-#### Setup Script `setup.sh`
+#### 3-3-1. Setup Script `setup.sh`
 
 ```bash
 #!/bin/bash
@@ -343,7 +343,7 @@ source .venv/bin/activate
 pip3 install "fastapi[standard]" httpx
 ```
 
-#### scp
+#### 3-3-2. scp
 
 ```bash
 for ip in xxx.xxx.xxx.xxx yyy.yyy.yyy.yyy
@@ -353,7 +353,7 @@ do
 done
 ```
 
-### 4. `ssh` into instances to spin up the services 
+### 3-4. `ssh` into instances to spin up the services 
 
 ```bash
 ssh -i <pem-file> ec2-user@ip
@@ -361,9 +361,9 @@ source /home/ec2-user/app/.venv/bin/activate && \
 fastapi run receiver.py --port 8080
 ```
 
-## 3. Set up NACL for the Data Access Subnet
+## 4. Set up NACL for the Data Access Subnet
 
-### 0. (Optional) Tag subnets
+### 4-0. (Optional) Tag subnets
 
 ```bash
 # For the Data Access subnet -> Subnet1
@@ -377,7 +377,7 @@ aws ec2 create-tags \
 --tags Key=Name,Value=Subnet2
 ```
 
-### 1. Get `VpcId`
+### 4-1. Get `VpcId`
 
 ```bash
 aws ec2 describe-vpcs \
@@ -385,7 +385,7 @@ aws ec2 describe-vpcs \
 --query "Vpcs[0].VpcId"
 ```
 
-### 2. Create an NACL for the data access subnet
+### 4-2. Create an NACL for the data access subnet
 
 ```bash
 aws ec2 create-network-acl \
@@ -393,7 +393,7 @@ aws ec2 create-network-acl \
 --tag-specifications "Tags=[{Key=Name,Value=elb-acl}]"
 ```
 
-### 3. Get the current `NetworkAclAssociationId` for our data access subnet
+### 4-3. Get the current `NetworkAclAssociationId` for our data access subnet
 
 ```bash
 aws ec2 describe-network-acls \
@@ -402,7 +402,7 @@ aws ec2 describe-network-acls \
 --output text
 ```
 
-### 4. Replace the subnet's NACL to our newly created one
+### 4-4. Replace the subnet's NACL to our newly created one
 
 ```bash
 aws ec2 replace-network-acl-association \
@@ -412,13 +412,13 @@ aws ec2 replace-network-acl-association \
 
 - You should get a new association id after this command
 
-### 5. Set up inbound rules
+### 4-5. Set up inbound rules
 
 > [!WARNING]
 >
 > As `NACL` is stateless, you have to set up inbound (`ingress`) and outbound `egress` rules to ensure proper access control.
 
-#### Egress
+#### 4-5-1. Egress
 
 ```bash
 aws ec2 create-network-acl-entry \
@@ -431,7 +431,7 @@ aws ec2 create-network-acl-entry \
 --egress
 ```
 
-#### SSH
+#### 4-5-2. SSH
 
 ```bash
 aws ec2 create-network-acl-entry \
@@ -444,7 +444,7 @@ aws ec2 create-network-acl-entry \
 --ingress
 ```
 
-#### Port 8080
+#### 4-5-3. Port 8080
 
 ```bash
 # get the cidr block of your receiver subnet 
@@ -462,7 +462,7 @@ aws ec2 create-network-acl-entry \
 --ingress
 ```
 
-#### Port 5000
+#### 4-5-4. Port 5000
 
 ```bash
 aws ec2 create-network-acl-entry \
@@ -475,7 +475,7 @@ aws ec2 create-network-acl-entry \
 --ingress
 ```
 
-#### Ensure everything is set up correctly
+#### 4-5-5. Ensure everything is set up correctly
 
 ```bash
 aws ec2 describe-network-acls \
@@ -483,9 +483,9 @@ aws ec2 describe-network-acls \
 --query "NetworkAcls[0].Entries"
 ```
 
-### 6. Set up security group authorization
+### 4-6. Set up security group authorization
 
-#### 1. Create a new security group for data access service
+#### 4-6-1. Create a new security group for data access service
 
 ```bash
 aws ec2 create-security-group \
@@ -505,7 +505,7 @@ aws ec2 authorize-security-group-ingress \
 --cidr 172.31.16.0/20
 ```
 
-#### 2. Create a new security group for receiver services
+#### 4-6-2. Create a new security group for receiver services
 
 ```bash
 aws ec2 create-security-group \
@@ -520,7 +520,7 @@ aws ec2 authorize-security-group-ingress \
 ```
 
 
-#### 3. Attach the new sg to the respective instances
+#### 4-6-3. Attach the new sg to the respective instances
 
 ```bash
 # find out the network interface
@@ -539,9 +539,9 @@ aws ec2 modify-network-interface-attribute \
 >
 > `modify-network-interface-attribute` will overwrite the current security groups, so you have to include all the security groups that you want.
 
-## 4. Create a Load Balancer
+## 5. Create a Load Balancer
 
-### 1. Create a security group for the load balancer
+### 5-1. Create a security group for the load balancer
 
 ```bash
 aws ec2 create-security-group \
@@ -556,7 +556,7 @@ aws ec2 authorize-security-group-ingress \
 --cidr 0.0.0.0/0
 ```
 
-### 2. Create a load balancer
+### 5-2. Create a load balancer
 
 ```bash
 aws elbv2 create-load-balancer \
@@ -571,7 +571,7 @@ aws elbv2 create-load-balancer \
 >
 > Remember to copy the load balancer arn
 
-### 3. Create a target group for receivers
+### 5-3. Create a target group for receivers
 
 ```bash
 aws elbv2 create-target-group \
@@ -587,7 +587,7 @@ aws elbv2 create-target-group \
 > Remember to copy the target group arn
 
 
-### 4. Register EC2 instances
+### 5-4. Register EC2 instances
 
 ```bash
 aws elbv2 register-targets \
@@ -595,7 +595,7 @@ aws elbv2 register-targets \
 --targets Id=i-XXXXXXX Id=i-YYYYYYY 
 ```
 
-### 5. Create a listener
+### 5-5. Create a listener
 
 ```bash
 aws elbv2 create-listener \
@@ -606,7 +606,7 @@ aws elbv2 create-listener \
 ```
 
 
-### 6. Get load balancer DNS 
+### 5-6. Get load balancer DNS 
 
 ```bash
 aws elbv2 describe-load-balancers \
@@ -614,7 +614,7 @@ aws elbv2 describe-load-balancers \
 --query "LoadBalancers[0].DNSName"
 ```
 
-### 7. Test it with `curl`
+### 5-7. Test it with `curl`
 
 ```bash
 curl http://<dns-name>
@@ -661,7 +661,7 @@ def get_private_ip():
 >
 > By default, the load balancer should be `internet-facing`, but we include the `--scheme` flag just in case.
 
-### 1. Create a load balancer
+### 3-1. Create a load balancer
 
 ```bash
 aws elbv2 create-load-balancer \
@@ -672,7 +672,7 @@ aws elbv2 create-load-balancer \
 --scheme internet-facing
 ```
 
-### 2. Create a target group
+### 3-2. Create a target group
 
 ```bash
 aws elbv2 create-target-group \
@@ -683,7 +683,7 @@ aws elbv2 create-target-group \
 --target-type instance
 ```
 
-### 3. Create a listener
+### 3-3. Create a listener
 
 ```bash
 aws elbv2 create-listener \
@@ -695,7 +695,7 @@ aws elbv2 create-listener \
 
 ## 4. Create a Launch Template
 
-### 1. Copy the provided script and paste your token
+### 4-1. Copy the provided script and paste your token
 
 ```bash
 #!/bin/bash
@@ -712,13 +712,13 @@ cd /home/ec2-user/YOUR_CODECOMMIT_REPO_NAME
 python3 serve.py
 ```
 
-### 2. Base64 encode it
+### 4-2. Base64 encode it
 
 ```bash
 base64 -i launch_template.sh -o launch_template.txt
 ```
 
-### 3. Create a template
+### 4-3. Create a template
 
 ```bash
 aws ec2 create-launch-template \
@@ -770,7 +770,7 @@ aws autoscaling put-scaling-policy \
 
 - For the remaining parts, here are some useful commands for you test out your auto scaling groups
 
-### Get load balancer's domain name
+### 7-1. Get load balancer's domain name
 
 ```bash
 aws elbv2 describe-load-balancers \
@@ -778,7 +778,7 @@ aws elbv2 describe-load-balancers \
 --query "LoadBalancers[0].DNSName"
 ```
 
-### List out instance ids and their public address
+### 7-2. List out instance ids and their public address
 
 ```bash
 aws ec2 describe-instances \
@@ -790,7 +790,7 @@ aws ec2 describe-instances \
   --output table
 ```
 
-### Send requests iteratively
+### 7-3. Send requests iteratively
 
 ```bash
 for i in {1..10}; do
