@@ -1,0 +1,17 @@
+boto3==1.42.54
+boto3-stubs==1.42.54
+botocore==1.42.54
+botocore-stubs==1.42.41
+iniconfig==2.3.0
+jmespath==1.1.0
+mypy-boto3-dynamodb==1.42.41
+packaging==26.0
+pluggy==1.6.0
+pygments==2.19.2
+pytest==9.0.2
+python-dateutil==2.9.0.post0
+s3transfer==0.16.0
+six==1.17.0
+types-awscrt==0.31.2
+types-s3transfer==0.16.0
+urllib3==2.6.3
