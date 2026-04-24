@@ -1,0 +1,25 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kafka-cluster:Connect",
+        "kafka-cluster:DescribeCluster",
+        "kafka-cluster:WriteData",
+        "kafka-cluster:ReadData",
+        "kafka-cluster:DescribeGroup",
+        "kafka-cluster:CreateTopic",
+        "kafka-cluster:AlterTopic",
+        "kafka-cluster:DeleteTopic",
+        "kafka-cluster:DescribeTopic",
+        "kafka-cluster:AlterGroup"
+      ],
+      "Resource": [
+        "arn:aws:kafka:us-east-1:221840298051:cluster/mp6-msk-cluster/2edbcd22-f2b0-402b-b0b5-6dddeda969c1-21",
+        "arn:aws:kafka:us-east-1:221840298051:topic/mp6-msk-cluster/2edbcd22-f2b0-402b-b0b5-6dddeda969c1-21/*",
+        "arn:aws:kafka:us-east-1:221840298051:group/mp6-msk-cluster/2edbcd22-f2b0-402b-b0b5-6dddeda969c1-21/*"
+      ]
+    }
+  ]
+}

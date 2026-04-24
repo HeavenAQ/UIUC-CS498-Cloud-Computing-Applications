@@ -1,0 +1,19 @@
+{
+  "ClusterName": "mp6-msk-cluster",
+  "Provisioned": {
+    "KafkaVersion": "3.6.0",
+    "NumberOfBrokerNodes": 2,
+    "BrokerNodeGroupInfo": {
+      "InstanceType": "kafka.t3.small",
+      "ClientSubnets": ["subnet-0879782dd5ce45525", "subnet-0021c5b791ec13bbd"],
+      "SecurityGroups": ["sg-02e4caac01d9eebf1"]
+    },
+    "ClientAuthentication": {
+      "Sasl": {
+        "Iam": {
+          "Enabled": true
+        }
+      }
+    }
+  }
+}
