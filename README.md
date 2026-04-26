@@ -84,9 +84,13 @@ A PySpark SQL and DataFrame assignment that analyzes Google Books ngram data.
 
 ### `MP9/`
 
-A flight data deduplication assignment (data only; implementation not yet present).
+A flight data pipeline assignment using AWS Glue, S3, and PySpark for deduplication and analysis.
 
 - `flights-1-with-duplicates.csv` through `flights-5-with-duplicates.csv` are the input datasets containing duplicate flight records.
+- `job2.py` is an AWS Glue ETL job that reads from the Glue Data Catalog, computes a `time_zone_difference` column from scheduled arrival/departure times, updates the catalog schema, and writes the transformed data to S3 as JSON.
+- `AWS Glue Job 3 Notebook.ipynb` is a Glue interactive notebook that deduplicates flight records, computes statistics (mean/stddev of air time and departure delay), performs flight route popularity analysis, and buckets departures by time of day (Morning/Afternoon/etc.).
+- `submit.py` handles assignment submission.
+- Output CSVs (`query1_result.csv`, `query2_result.csv`, `job3-part2.csv`, `mp9-viz*.csv`) contain intermediate and final results from the pipeline.
 
 ### `RAG/`
 
